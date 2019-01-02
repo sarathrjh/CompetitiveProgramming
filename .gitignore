@@ -8,3 +8,6 @@
 *.ilk
 *.ipch
 *.suo
+*.log
+*.idb
+*.pch

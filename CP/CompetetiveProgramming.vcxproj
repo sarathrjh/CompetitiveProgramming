@@ -81,7 +81,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArrayDiff.h" />
+    <ClInclude Include="Stock.h" />
     <ClInclude Include="AutoSearch.h" />
     <ClInclude Include="BinaryTree.h" />
     <ClInclude Include="BitOperations.h" />

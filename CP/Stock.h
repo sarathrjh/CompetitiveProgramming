@@ -14,12 +14,12 @@ struct Pair
 class QueueUsingStack
 {
 public:
-	QueueUsingStack()
+	QueueUsingStack() : m_nLength(-1)
 	{
-		m_nLength = -1;
+		m_nStack[256] = { 0 };
 	}
 
-	void insertToQueue(int nData)
+	void insertToQueue(int const nData)
 	{
 		if (m_nLength == 256)
 		{
@@ -48,6 +48,7 @@ public:
 		m_nStack[++m_nLength] = curVal;
 		return res;
 	}
+
 private:
 	int m_nLength;
 	int m_nStack[256];
@@ -58,36 +59,38 @@ class Stock
 {
 public:
 
-	int maxDiff(int arr[], int n)
+	int maxDiff(int arr[], int const size)
 	{
 		// Create a diff array of size n-1. The array will hold
 		//  the difference of adjacent elements
-		int *diff = new int[n - 1];
-		for (int i = 0; i < n - 1; i++)
-			diff[i] = arr[i + 1] - arr[i];
-
-		// Now find the maximum sum subarray in diff array
-		int max_diff = diff[0];
-		for (int i = 1; i<n - 1; i++)
+		std::vector<int> diffArr(size - 1, 0);
+		for (auto Index = 0; Index < size - 1; ++Index)
 		{
-			if (diff[i - 1] > 0)
-				diff[i] += diff[i - 1];
-			if (max_diff < diff[i])
-				max_diff = diff[i];
+			diffArr[Index] = arr[Index + 1] - arr[Index];
+		}
+		
+		// Now find the maximum sum subarray in diff array
+		auto max_diff = diffArr[0];
+		for (auto Index = 0; Index < size - 1; ++Index)
+		{
+			if (diffArr[Index - 1] > 0)
+				diffArr[Index] += diffArr[Index - 1];
+			if (max_diff < diffArr[Index])
+				max_diff = diffArr[Index];
 		}
 		return max_diff;
 	}
 
-	std::map<int, Pair> getMaxProfit(int stockArray[], int nLength)
+	std::map<int, Pair> getMaxProfit(int stockArray[], int const nLength)
 	{
 		Pair stkPair;
 		std::map<int, Pair> StockPair;
-		int nBuyIndex = 0;
-		int nSellIndex = 0;
-		int nMinIndex = 0;
-		int nProfit = 0;
+		auto nBuyIndex = 0;
+		auto nSellIndex = 0;
+		auto nMinIndex = 0;
+		auto nProfit = 0;
 
-		for (int nIndex = 0; nIndex < nLength; nIndex++)
+		for (auto nIndex = 0; nIndex < nLength; ++nIndex)
 		{
 			if (stockArray[nIndex] < stockArray[nMinIndex])
 			{
@@ -112,24 +115,24 @@ public:
 	Explanation: Buy on day 4 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
              Then buy on day 7 (price = 1) and sell on day 8 (price = 4), profit = 4-1 = 3.*/
 
-	int findMaxProfitWithAtMost2Transaction(int stockPrices[], int size)
+	int findMaxProfitWithAtMost2Transaction(int stockPrices[], int const size)
 	{
 		if (size < 2)
 		{
 			return 0;
 		}
 		std::vector<int> leftStock(size, 0);
-		int minVal = stockPrices[0];
-		for (int Index = 1; Index < size; Index++)
+		auto minVal = stockPrices[0];
+		for (auto Index = 1; Index < size; ++Index)
 		{
 			minVal = min(minVal, stockPrices[Index]);
 			leftStock[Index] = max(leftStock[Index - 1], (stockPrices[Index] - minVal));
 		}
 
-		int temp = 0;
-		int maxVal = stockPrices[size - 1];
-		int profit = max(temp, leftStock[size - 1]);
-		for (int Index = size - 2; Index >= 0; Index--)
+		auto temp = 0;
+		auto maxVal = stockPrices[size - 1];
+		auto profit = max(temp, leftStock[size - 1]);
+		for (auto Index = size - 2; Index >= 0; Index--)
 		{
 			maxVal = max(maxVal, stockPrices[Index]);
 			temp = max(temp, (maxVal - stockPrices[Index]));
@@ -139,17 +142,17 @@ public:
 		return profit;
 	}
 
-	int maxDiff_opt(int arr[], int n)
+	int maxDiff_opt(int arr[], int const size)
 	{
 		// Initialize diff, current sum and max sum
-		int diff = -1;// arr[1] - arr[0];
-		int curr_sum = diff;
-		int max_sum = curr_sum;
+		auto diff = -1;// arr[1] - arr[0];
+		auto curr_sum = diff;
+		auto max_sum = curr_sum;
 
-		for (int i = 0; i < n - 1; i++)
+		for (auto Index = 0; Index < size - 1; ++Index)
 		{
 			// Calculate current diff
-			diff = arr[i + 1] - arr[i];
+			diff = arr[Index + 1] - arr[Index];
 
 			// Calculate current sum
 			if (curr_sum > 0)
@@ -166,19 +169,19 @@ public:
 		return max_sum;
 	}
 
-	std::vector<int> findIntersection(int Array1[], int Array2[], int nSize1, int nSize2)
+	std::vector<int> findIntersection(int Array1[], int Array2[], int const nSize1, int const nSize2)
 	{
 		std::vector<int> intersectionVector;
 		if (nSize1 > 0 && nSize2 > 0)
 		{
 			std::map<int, int> FirstArray;
 
-			for (int nIndex = 0; nIndex < nSize1; nIndex++)
+			for (auto nIndex = 0; nIndex < nSize1; ++nIndex)
 			{
 				FirstArray[Array1[nIndex]] = Array1[nIndex];
 			}
 
-			for (int nIndex2 = 0; nIndex2 < nSize2; nIndex2++)
+			for (auto nIndex2 = 0; nIndex2 < nSize2; ++nIndex2)
 			{
 				if ((FirstArray.find(Array2[nIndex2]) != FirstArray.end()) &&
 					(std::find(intersectionVector.begin(), intersectionVector.end(), Array2[nIndex2]) == intersectionVector.end()))
@@ -190,7 +193,7 @@ public:
 		return intersectionVector;
 	}
 
-	std::vector<int> findArrayIntersection(int Array1[], int Array2[], int nSize1, int nSize2)
+	std::vector<int> findArrayIntersection(int Array1[], int Array2[], int const nSize1, int const nSize2)
 	{
 		std::vector<int> intersectionVector;
 		if (nSize1 > 0 && nSize2 > 0)

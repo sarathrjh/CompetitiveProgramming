@@ -12,7 +12,7 @@
 #include <cctype>
 #include "LinkedList.h"
 #include "BinaryTree.h"
-#include "ArrayDiff.h"
+#include "Stock.h"
 #include "PriorityQueue.h"
 #include "Sorting.h"
 //#include "Matrices.h"

@@ -22,7 +22,7 @@ public class Course {
 
 	private Date endDate;
 
-	private Date time;
+	private String time;
 
 	private int credit;
 
@@ -50,17 +50,15 @@ public class Course {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
+	}	
 
-	public Date getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
-
-	
 
 	public Long getSubjectId() {
 		return subjectId;

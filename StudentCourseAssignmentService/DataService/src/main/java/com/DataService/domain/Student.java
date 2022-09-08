@@ -18,6 +18,15 @@ public class Student {
 
 	private int creditCapacity;
 
+	public Student(String studentId, String studentName, int creditCapacity) {
+		super();
+		this.studentId = studentId;
+		this.studentName = studentName;
+		this.creditCapacity = creditCapacity;
+	}
+
+
+
 	public String getStudentName() {
 		return studentName;
 	}

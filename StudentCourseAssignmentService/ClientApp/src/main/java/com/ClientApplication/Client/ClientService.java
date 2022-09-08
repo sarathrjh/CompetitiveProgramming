@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ClientService {
 
-	// public Student resetDataStore(Long timestamp);
+	public boolean resetDataStore(long timestamp);
 
 	public boolean createStudent(String studentId, String studentName, int creditCapacity);
 

@@ -21,8 +21,9 @@ public class Student {
 	}
 
 
-	public Student(String studentName, int creditCapacity) {
+	public Student(String studentId, String studentName, int creditCapacity) {
 		super();
+		this.studentId = studentId;
 		this.studentName = studentName;
 		this.creditCapacity = creditCapacity;
 	}

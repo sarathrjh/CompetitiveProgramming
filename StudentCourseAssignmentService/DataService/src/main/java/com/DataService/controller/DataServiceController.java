@@ -1,5 +1,6 @@
 package com.DataService.controller;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,14 +29,16 @@ public class DataServiceController {
 		return dataStudentCourseService.createStudent(student);
 	}
 
-	@GetMapping("/getStudentByStudentId/{studentId}")
-	public List<Student> getStudentByStudentId(@PathVariable("studentId") String studentId) {
-		return dataStudentCourseService.getStudentByStudentId(studentId);
+	
+	@GetMapping("/getStudentByStudentId/{studentIdentity}")
+	public Student getStudentByStudentId(@PathVariable("studentIdentity") Long studentIdentity) {
+		return dataStudentCourseService.getStudentByStudentId(studentIdentity);
 	}
+	 
 
-	@GetMapping("/getStudentById/{id}")
-	public Student getStudentById(@PathVariable("id") Long id) {
-		return dataStudentCourseService.getStudentById(id);
+	@GetMapping("/getStudentById/{studentId}")
+	public Student getStudentById(@PathVariable("studentId") String studentId) {
+		return dataStudentCourseService.getStudentById(studentId);
 	}
 
 	@GetMapping("/getStudentByStudentName/{studentName}")
@@ -48,14 +51,16 @@ public class DataServiceController {
 		return dataStudentCourseService.getCourseByCourseName(courseName);
 	}
 
-	@GetMapping("/getCourseByCourseId/{courseId}")
-	public List<Course> getCourseByCourseId(@PathVariable("courseId") String courseId) {
-		return dataStudentCourseService.getCourseByCourseId(courseId);
+	
+	@GetMapping("/getCourseByCourseId/{subjectId}")
+	public Course getCourseByCourseId(@PathVariable("subjectId") Long subjectId) {
+		return dataStudentCourseService.getCourseByCourseId(subjectId);
 	}
+	 
 
-	@GetMapping("/getCourseById/{id}")
-	public Course getCourseById(@PathVariable("id") Long id) {
-		return dataStudentCourseService.getCourseById(id);
+	@GetMapping("/getCourseById/{courseId}")
+	public Course getCourseById(@PathVariable("courseId") String courseId) {
+		return dataStudentCourseService.getCourseById(courseId);
 	}
 
 	@PutMapping("/updateStudent")
@@ -102,6 +107,11 @@ public class DataServiceController {
 	@DeleteMapping("/removeStudentToCourse/{id}")
 	public boolean removeStudentToCourse(@PathVariable("id") Long id) {
 		return dataStudentCourseService.removeStudentToCourse(id);
+	}
+	
+	@PostMapping("/resetDataStore/{timestamp}")
+	public boolean resetDataStore(@PathVariable("timestamp") Long timestamp) throws FileNotFoundException {
+		return dataStudentCourseService.resetDataStore(timestamp);
 	}
 
 }

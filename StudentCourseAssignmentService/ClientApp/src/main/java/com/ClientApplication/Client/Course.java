@@ -27,7 +27,7 @@ public class Course {
 	private Date endDate;
 
 	@JsonProperty("time")
-	private Date time;
+	private String time;
 
 	public Long getSubjectId() {
 		return subjectId;
@@ -72,11 +72,11 @@ public class Course {
 		this.endDate = endDate;
 	}
 
-	public Date getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(Date time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 

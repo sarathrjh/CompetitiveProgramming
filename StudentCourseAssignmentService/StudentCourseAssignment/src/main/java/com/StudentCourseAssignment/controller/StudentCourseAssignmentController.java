@@ -91,7 +91,7 @@ public class StudentCourseAssignmentController {
 	}
 
 	@PostMapping("/resetDataStore/{timestamp}")
-	public Student resetDataStore(@PathVariable("timestamp") Long timestamp) {
+	public boolean resetDataStore(@PathVariable("timestamp") Long timestamp) {
 		return studentCourseAssignmentService.resetDataStore(timestamp);
 	}
 

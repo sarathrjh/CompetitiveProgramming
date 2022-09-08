@@ -1,10 +1,11 @@
 package com.StudentCourseAssignment.domain;
 
-import java.sql.Time;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Course {
 	
 	public String getCourseId() {
@@ -51,7 +52,7 @@ public class Course {
 	private Date endDate;
 
 	@JsonProperty("time")
-	private Date time;
+	private String time;
 	
 	@JsonProperty("day")
 	private String day;
@@ -65,8 +66,9 @@ public class Course {
 	@JsonProperty("capacity")
 	private int capacity;
 
-	public Course(String courseName, Date startDate, Date endDate, Time time, int credit, int capacity) {
+	public Course(String courseId,String courseName, Date startDate, Date endDate, String time, int credit, int capacity) {
 		super();
+		this.courseId = courseId;
 		this.courseName = courseName;
 		this.startDate = startDate;
 		this.endDate = endDate;
@@ -97,14 +99,6 @@ public class Course {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
-	}
-
-	public Date getTime() {
-		return time;
-	}
-
-	public void setTime(Date time) {
-		this.time = time;
 	}
 
 	public int getCredit() {

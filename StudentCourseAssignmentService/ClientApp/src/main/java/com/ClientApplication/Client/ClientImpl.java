@@ -22,7 +22,6 @@ public class ClientImpl implements ClientService {
 	CommunicationService communicationService;
 
 	private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
 	private static final String POST = "Post";
 	private static final String GET = "GET";
 	private static final String DELETE = "DELETE";
@@ -91,7 +90,7 @@ public class ClientImpl implements ClientService {
 			course.setSemester(semester);
 			course.setStartDate(format.parse(startDate));
 			course.setEndDate(format.parse(endDate));
-			course.setTime(sdf.parse(time));
+			course.setTime(time);
 			course.setCredit(credit);
 			String url = studentCourseApplicationurl + "/createCourse";
 			UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
@@ -126,7 +125,7 @@ public class ClientImpl implements ClientService {
 			course.setSemester(semester);
 			course.setStartDate(format.parse(startDate));
 			course.setEndDate(format.parse(endDate));
-			course.setTime(sdf.parse(time));
+			course.setTime(time);
 			String url = studentCourseApplicationurl + "/updateCourse";
 			UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 			ResponseEntity<Object> response = communicationService.restTemplateExchange(builder.toUriString(), PUT,
@@ -315,5 +314,19 @@ public class ClientImpl implements ClientService {
 
 		}
 		return null;
+	}
+
+	
+	public boolean resetDataStore(long timestamp) {
+
+		String url = studentCourseApplicationurl + "/resetDataStore/{timestamp}";
+		Map<String, Long> urlParams = new HashMap<>();
+		urlParams.put("timestamp", timestamp);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
+		ResponseEntity<Object> response = communicationService.restTemplateExchange(builder.buildAndExpand(urlParams).toUriString(), POST, Boolean.class);
+		if (response != null && response.getBody() != null) {
+			return true;
+		}
+		return false;
 	}
 }

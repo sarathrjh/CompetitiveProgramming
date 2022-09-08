@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CommunicationService {
 
-	public ResponseEntity<Object> restTemplateExchange(String uriString, String httpMEthod, Object object);
+	public ResponseEntity<Object> restTemplateExchange(String uriString, String httpMethod, Object object);
 
 	public List<Object> restTemplateExchangeForList(String uriString, String get, Object object);
 

@@ -35,9 +35,9 @@ public class StudentCourseAssignmentService {
 
 	public Student createStudent(Student student) {
 
-		List<Object> students = getStudentDetails(student);
+		ResponseEntity<Object> students = getStudentDetails(student);
 		ObjectMapper objectMapper = new ObjectMapper();
-		if (Objects.isNull(students) || students.isEmpty()) {
+		if (Objects.isNull(students) || Objects.isNull(students.getBody())) {
 			String url = dataServiceUrl + "/createStudent";
 			UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 			ResponseEntity<Object> response = communicationService.restTemplateExchange(builder.toUriString(), POST,
@@ -55,16 +55,15 @@ public class StudentCourseAssignmentService {
 	}
 
 	public Student updateStudent(Student student) {
-		List<Object> students = getStudentDetails(student);
+		ResponseEntity<Object> students = getStudentDetails(student);
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		if (Objects.nonNull(students)) {
-			List<Student> studnt = objectMapper.convertValue(students, new TypeReference<List<Student>>() {
-			});
+		if (Objects.nonNull(students) && Objects.nonNull(students.getBody())) {
+			 Student studnt = objectMapper.convertValue(students.getBody(), Student.class);
 			if (studnt != null) {
-				student.setStudentIdentity(studnt.get(0).getStudentIdentity());
-				student.setStudentId(studnt.get(0).getStudentId());
-				student.setStudentName(studnt.get(0).getStudentName());
+				student.setStudentIdentity(studnt.getStudentIdentity());
+				student.setStudentId(studnt.getStudentId());
+				student.setStudentName(studnt.getStudentName());
 				student.setCreditCapacity(student.getCreditCapacity());
 				String url = dataServiceUrl + "/updateStudent";
 				UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
@@ -85,9 +84,9 @@ public class StudentCourseAssignmentService {
 	}
 
 	public Course createCourse(Course course) {
-		List<Object> courses = getCourseDetails(course);
+		ResponseEntity<Object> courses = getCourseDetails(course);
 		ObjectMapper objectMapper = new ObjectMapper();
-		if (Objects.isNull(courses) || courses.isEmpty()) {
+		if (Objects.isNull(courses) || Objects.isNull(courses.getBody())) {
 			String url = dataServiceUrl + "/createCourse";
 			UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 			ResponseEntity<Object> response = communicationService.restTemplateExchange(builder.toUriString(), POST,
@@ -110,26 +109,24 @@ public class StudentCourseAssignmentService {
 		StudentCourse studentCourse = new StudentCourse();
 		student.setStudentId(studentId);
 
-		List<Object> students = getStudentDetails(student);
-		if (Objects.nonNull(students)) {
-			List<Student> studentResponse = objectMapper.convertValue(students, new TypeReference<List<Student>>() {
-			});
+		ResponseEntity<Object> students = getStudentDetails(student);
+		if (Objects.nonNull(students) && Objects.nonNull(students.getBody())) {
+			Student studentResponse = objectMapper.convertValue(students.getBody(), Student.class);
 			if (studentResponse != null) {
 
 				course.setCourseId(courseId);
-				List<Object> courses = getCourseDetails(course);
+				ResponseEntity<Object> courses = getCourseDetails(course);
 
-				if (Objects.nonNull(courses)) {
-					List<Course> courseResponse = objectMapper.convertValue(courses, new TypeReference<List<Course>>() {
-					});
+				if (Objects.nonNull(courses) && Objects.nonNull(courses.getBody())) {
+					Course courseResponse = objectMapper.convertValue(courses.getBody(), Course.class);
 					if (courseResponse != null) {
-						studentCourse.setStudentId(studentResponse.get(0).getStudentIdentity());
-						studentCourse.setCourseId(courseResponse.get(0).getSubjectId());
+						studentCourse.setStudentId(studentResponse.getStudentIdentity());
+						studentCourse.setCourseId(courseResponse.getSubjectId());
 						String url = dataServiceUrl + "/getStudentGrade/{studentId}/{courseId}";
 						Map<String, Long> urlParams = new HashMap<>();
 
-						urlParams.put("studentId", studentResponse.get(0).getStudentIdentity());
-						urlParams.put("courseId", courseResponse.get(0).getSubjectId());
+						urlParams.put("studentId", studentResponse.getStudentIdentity());
+						urlParams.put("courseId", courseResponse.getSubjectId());
 						UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 						ResponseEntity<Object> response = communicationService.restTemplateExchange(
 								builder.buildAndExpand(urlParams).toUriString(), GET, studentCourse);
@@ -169,21 +166,19 @@ public class StudentCourseAssignmentService {
 		StudentCourse studentCourse = new StudentCourse();
 		student.setStudentId(studentId);
 
-		List<Object> students = getStudentDetails(student);
-		if (Objects.nonNull(students)) {
-			List<Student> studentList = objectMapper.convertValue(students, new TypeReference<List<Student>>() {
-			});
+		ResponseEntity<Object> students = getStudentDetails(student);
+		if (Objects.nonNull(students) && Objects.nonNull(students.getBody())) {
+			Student studentList = objectMapper.convertValue(students.getBody(), Student.class);
 			if (studentList != null) {
 
 				course.setCourseId(courseId);
-				List<Object> courses = getCourseDetails(course);
+				ResponseEntity<Object> courses = getCourseDetails(course);
 
-				if (Objects.nonNull(courses)) {
-					List<Course> courseList = objectMapper.convertValue(courses, new TypeReference<List<Course>>() {
-					});
+				if (Objects.nonNull(courses) && Objects.nonNull(courses.getBody())) {
+					Course courseList = objectMapper.convertValue(courses.getBody(),Course.class);
 					if (courseList != null) {
-						studentCourse.setStudentId(studentList.get(0).getStudentIdentity());
-						studentCourse.setCourseId(courseList.get(0).getSubjectId());
+						studentCourse.setStudentId(studentList.getStudentIdentity());
+						studentCourse.setCourseId(courseList.getSubjectId());
 						String url = dataServiceUrl + "/getStudentGrade/{studentId}/{courseId}";
 						Map<String, Long> urlParams = new HashMap<>();
 
@@ -192,7 +187,7 @@ public class StudentCourseAssignmentService {
 						UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 						ResponseEntity<Object> response = communicationService.restTemplateExchange(
 								builder.buildAndExpand(urlParams).toUriString(), GET, studentCourse);
-						if (response != null || response.getBody() != null) {
+						if (response != null && response.getBody() != null) {
 							StudentCourse studentCourseResponse = objectMapper.convertValue(response.getBody(),
 									StudentCourse.class);
 							if (studentCourseResponse != null) {
@@ -229,22 +224,20 @@ public class StudentCourseAssignmentService {
 		StudentCourse studentCourse = new StudentCourse();
 		student.setStudentId(studentId);
 
-		List<Object> students = getStudentDetails(student);
-		if (Objects.nonNull(students)) {
-			List<Student> studentList = objectMapper.convertValue(students, new TypeReference<List<Student>>() {
-			});
+		ResponseEntity<Object> students = getStudentDetails(student);
+		if (Objects.nonNull(students) && Objects.nonNull(students.getBody())) {
+			Student studentList = objectMapper.convertValue(students.getBody(),Student.class);
 			if (studentList != null) {
 
 				course.setCourseId(courseId);
-				List<Object> courses = getCourseDetails(course);
+				ResponseEntity<Object> courses = getCourseDetails(course);
 
-				if (Objects.nonNull(courses)) {
-					List<Course> courseResponse = objectMapper.convertValue(courses, new TypeReference<List<Course>>() {
-					});
+				if (Objects.nonNull(courses) && Objects.nonNull(courses.getBody())) {
+					Course courseResponse = objectMapper.convertValue(courses.getBody(), Course.class);
 					if (courseResponse != null) {
 
-						studentCourse.setStudentId(studentList.get(0).getStudentIdentity());
-						studentCourse.setCourseId(courseResponse.get(0).getSubjectId());
+						studentCourse.setStudentId(studentList.getStudentIdentity());
+						studentCourse.setCourseId(courseResponse.getSubjectId());
 						studentCourse.setGrade(grade);
 						String url = dataServiceUrl + "/setStudentGradeForCourse";
 						UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
@@ -274,25 +267,23 @@ public class StudentCourseAssignmentService {
 		Course course = new Course();
 		StudentCourse studentCourse = new StudentCourse();
 		student.setStudentId(studentId);
-		List<Object> students = getStudentDetails(student);
-		if (Objects.nonNull(students)) {
-			List<Student> studentList = objectMapper.convertValue(students, new TypeReference<List<Student>>() {
-			});
+		ResponseEntity<Object> students = getStudentDetails(student);
+		if (Objects.nonNull(students) && Objects.nonNull(students.getBody())) {
+			Student studentList = objectMapper.convertValue(students.getBody(), Student.class);
 			if (studentList != null) {
 				course.setCourseId(courseId);
-				List<Object> courses = getCourseDetails(course);
+				ResponseEntity<Object> courses = getCourseDetails(course);
 
-				if (Objects.nonNull(courses)) {
-					List<Course> courseList = objectMapper.convertValue(courses, new TypeReference<List<Course>>() {
-					});
+				if (Objects.nonNull(courses) && Objects.nonNull(courses.getBody())) {
+					Course courseList = objectMapper.convertValue(courses.getBody(),Course.class);
 					if (courseList != null) {
-						studentCourse.setStudentId(studentList.get(0).getStudentIdentity());
-						studentCourse.setCourseId(courseList.get(0).getSubjectId());
+						studentCourse.setStudentId(studentList.getStudentIdentity());
+						studentCourse.setCourseId(courseList.getSubjectId());
 						String url = dataServiceUrl + "/getStudentGrade/{studentId}/{courseId}";
 						Map<String, Long> urlParams = new HashMap<>();
 
-						urlParams.put("studentId", studentList.get(0).getStudentIdentity());
-						urlParams.put("courseId", courseList.get(0).getSubjectId());
+						urlParams.put("studentId", studentList.getStudentIdentity());
+						urlParams.put("courseId", courseList.getSubjectId());
 						UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 						ResponseEntity<Object> response = communicationService.restTemplateExchange(
 								builder.buildAndExpand(urlParams).toUriString(), GET, studentCourse);
@@ -324,13 +315,12 @@ public class StudentCourseAssignmentService {
 			student.setStudentId(studentId);
 			Double sum = 0.0;
 			int count = 0;
-			List<Object> students = getStudentDetails(student);
-			if (Objects.nonNull(students)) {
-				List<Student> studentList = objectMapper.convertValue(students, new TypeReference<List<Student>>() {
-				});
+			ResponseEntity<Object> students = getStudentDetails(student);
+			if (Objects.nonNull(students) && Objects.nonNull(students.getBody())) {
+				Student studentList = objectMapper.convertValue(students.getBody(),Student.class);
 				if (studentList != null) {
-					studentCourse.setStudentId(studentList.get(0).getStudentIdentity());
-					String url = dataServiceUrl + "getCoursesOfStudent/{urlParameter}?";
+					studentCourse.setStudentId(studentList.getStudentIdentity());
+					String url = dataServiceUrl + "/getCoursesOfStudent/{urlParameter}?";
 					UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 					Map<String, Long> uriVariables = new HashMap<>();
 
@@ -389,13 +379,12 @@ public class StudentCourseAssignmentService {
 			course.setCourseId(courseId);
 			Double sum = 0.0;
 			int count = 0;
-			List<Object> courses = getCourseDetails(course);
-			if (Objects.nonNull(courses)) {
-				List<Course> courseList = objectMapper.convertValue(courseId, new TypeReference<List<Course>>() {
-				});
+			ResponseEntity<Object> courses = getCourseDetails(course);
+			if (Objects.nonNull(courses) && Objects.nonNull(courses.getBody())) {
+				Course courseList = objectMapper.convertValue(courses.getBody(), Course.class);
 				if (courseList != null) {
-					studentCourse.setCourseId(courseList.get(0).getSubjectId());
-					String url = dataServiceUrl + "getStudentsOfCourse/{urlParameter}?";
+					studentCourse.setCourseId(courseList.getSubjectId());
+					String url = dataServiceUrl + "/getStudentsOfCourse/{urlParameter}?";
 					UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 					Map<String, Long> uriVariables = new HashMap<>();
 
@@ -446,15 +435,14 @@ public class StudentCourseAssignmentService {
 	}
 
 	public Course updateCourse(Course course) {
-		List<Object> courses = getCourseDetails(course);
+		ResponseEntity<Object> courses = getCourseDetails(course);
 		ObjectMapper objectMapper = new ObjectMapper();
-		if (Objects.nonNull(courses)) {
-			List<Course> courseList = objectMapper.convertValue(courses, new TypeReference<List<Course>>() {
-			});
+		if (Objects.nonNull(courses) && Objects.nonNull(courses.getBody())) {
+			Course courseList = objectMapper.convertValue(courses.getBody(), Course.class);
 			if (courseList != null) {
-				course.setSubjectId(courseList.get(0).getSubjectId());
-				course.setCourseId(courseList.get(0).getCourseId());
-				course.setCourseName(courseList.get(0).getCourseName());
+				course.setSubjectId(courseList.getSubjectId());
+				course.setCourseId(courseList.getCourseId());
+				course.setCourseName(courseList.getCourseName());
 				String url = dataServiceUrl + "/updateCourse";
 				UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 				ResponseEntity<Object> response = communicationService.restTemplateExchange(builder.toUriString(), PUT,
@@ -470,26 +458,26 @@ public class StudentCourseAssignmentService {
 		return null;
 	}
 
-	private List<Object> getCourseDetails(Course course) {
-		String url = dataServiceUrl + "/getCourseByCourseId/{urlParameter}?";
+	public ResponseEntity<Object> getCourseDetails(Course course) {
+		String url = dataServiceUrl + "/getCourseById/{urlParameter}?";
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 
 		Map<String, String> uriVariables = new HashMap<>();
 
 		uriVariables.put("urlParameter", course.getCourseId());
 
-		return communicationService.restTemplateExchangeForList(builder.buildAndExpand(uriVariables).toString(), GET,
+		return communicationService.restTemplateExchange(builder.buildAndExpand(uriVariables).toString(), GET,
 				course);
 
 	}
 
-	private List<Object> getStudentDetails(Student student) {
+	public ResponseEntity<Object> getStudentDetails(Student student) {
 		Map<String, String> uriVariables = new HashMap<>();
-		String url = dataServiceUrl + "/getStudentByStudentId/{urlParameter}?";
+		String url = dataServiceUrl + "/getStudentById/{urlParameter}?";
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 
 		uriVariables.put("urlParameter", student.getStudentId());
-		return communicationService.restTemplateExchangeForList(builder.buildAndExpand(uriVariables).toString(), GET,
+		return communicationService.restTemplateExchange(builder.buildAndExpand(uriVariables).toString(), GET,
 				student);
 	}
 
@@ -497,16 +485,15 @@ public class StudentCourseAssignmentService {
 		StudentCourse studentCourse = new StudentCourse();
 		Student student = new Student();
 		student.setStudentId(studentId);
-		List<Object> students = getStudentDetails(student);
+		ResponseEntity<Object> students = getStudentDetails(student);
 		List<Course> courses = new ArrayList<>();
 		Course course = new Course();
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		if (Objects.nonNull(students)) {
-			List<Student> studentList = objectMapper.convertValue(students, new TypeReference<List<Student>>() {
-			});
+		if (Objects.nonNull(students) && Objects.nonNull(students.getBody())) {
+			Student studentList = objectMapper.convertValue(students.getBody(), Student.class);
 			if (studentList != null) {
-				studentCourse.setStudentId(studentList.get(0).getStudentIdentity());
+				studentCourse.setStudentId(studentList.getStudentIdentity());
 				String url = dataServiceUrl + "/getCoursesOfStudent/{urlParameter}?";
 				UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 				Map<String, Long> uriVariables = new HashMap<>();
@@ -519,7 +506,7 @@ public class StudentCourseAssignmentService {
 							new TypeReference<List<StudentCourse>>() {
 							});
 					if (studentCourseResponse != null) {
-						url = dataServiceUrl + "/getCourseById/{urlParameter}?";
+						url = dataServiceUrl + "/getCourseByCourseId/{urlParameter}?";
 						builder = UriComponentsBuilder.fromUriString(url);
 						Map<String, Long> uriVariable = new HashMap<>();
 
@@ -555,14 +542,13 @@ public class StudentCourseAssignmentService {
 		Student student = new Student();
 		StudentCourse studentCourse = new StudentCourse();
 		course.setCourseId(courseId);
-		List<Object> courses = getCourseDetails(course);
+		ResponseEntity<Object> courses = getCourseDetails(course);
 		List<Student> studentList = new ArrayList<Student>();
 		ObjectMapper objectMapper = new ObjectMapper();
-		if (Objects.nonNull(courses)) {
-			List<Course> courseList = objectMapper.convertValue(courses, new TypeReference<List<Course>>() {
-			});
+		if (Objects.nonNull(courses) && Objects.nonNull(courses.getBody())) {
+			Course courseList = objectMapper.convertValue(courses.getBody(), Course.class);
 			if (courseList != null) {
-				studentCourse.setStudentId(courseList.get(0).getSubjectId());
+				studentCourse.setStudentId(courseList.getSubjectId());
 				String url = dataServiceUrl + "/getStudentsOfCourse/{urlParameter}?";
 				UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
 				Map<String, Long> uriVariables = new HashMap<>();
@@ -576,7 +562,7 @@ public class StudentCourseAssignmentService {
 							new TypeReference<List<StudentCourse>>() {
 							});
 					if (studentCourseResponse != null) {
-						url = dataServiceUrl + "/getStudentById/{urlParameter}?";
+						url = dataServiceUrl + "/getStudentByStudentId/{urlParameter}?";
 						builder = UriComponentsBuilder.fromUriString(url);
 						Map<String, Long> uriVariable = new HashMap<>();
 
@@ -606,10 +592,18 @@ public class StudentCourseAssignmentService {
 
 	}
 
-	public Student resetDataStore(Long timestamp) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean resetDataStore(Long timestamp) {
 
+		String url = dataServiceUrl + "/resetDataStore/{timestamp}";
+		Map<String, Long> urlParams = new HashMap<>();
+		urlParams.put("timestamp", timestamp);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url);
+		ResponseEntity<Object> response = communicationService.restTemplateExchange(builder.buildAndExpand(urlParams).toUriString(), POST,
+				Boolean.class);
+		if (Objects.nonNull(response) && Objects.nonNull(response.getBody())) {
+			return true;
+		}
+		return false;
 	}
 
 }
